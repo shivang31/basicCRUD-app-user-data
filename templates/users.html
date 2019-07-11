@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>List of users</title>
+<style>
+table {
+  width:60%;
+  margin-top: 20px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 15px;
+  text-align: left;
+}
+table#t01 tr:nth-child(even) {
+  background-color: #eee;
+}
+table#t01 tr:nth-child(odd) {
+ background-color: #fff;
+}
+table#t01 th {
+  background-color: black;
+  color: white;
+}
+</style>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+</head>
+
+<body >
+
+<div class="container">
+  
+  <button style="float: right;" type="button"  data-toggle="modal" data-target="#myModal">
+    ADD USER
+  </button>
+  <center>
+<table id="t01">
+	<tr>
+	<th>ID</th>
+    <th>Firstname</th>
+    <th>Lastname</th> 
+    <th>Email</th>
+    <th>Phone</th>
+    <th></th>
+    <th></th>
+  </tr>
+  {% for row in row%}
+  <tr>
+    <td>{{row._id}}</td>
+    <td>{{row.firstname}}</td>
+    <td>{{row.lastname}}</td> 
+    <td>{{row.email}}</td>
+    <td>{{row.phone}}</td>
+    <td><button style="float: right;" type="button" class="btn btn-warning" data-toggle="modal" onclick="getselecteduser('{{row._id}}')" data-target=#myModal2_{{row._id}}> EDIT
+  </button></td>
+    <td><form action="/delete/{{row._id}}"><button class="btn btn-danger" onclick="upd()">delete</button></form></td>
+  </tr>
+
+  <!-- The Modal -->
+  <div class="modal" id=myModal2_{{row._id}}>
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">UPDATE USER</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+            <form name="form12" method="post" action="/update">
+        
+    <dl>
+		<p>
+			<input name="firstname" value="{{ row.firstname }}" type="text" placeholder="firstname" autocomplete="off" >
+		</p>
+		<p>
+			<input name="lastname" value="{{ row.lastname }}" type="text" placeholder="lastname"  autocomplete="off">
+		</p>
+		<p>
+			<input name="email" value="{{ row.email }}" type="text" placeholder="email" autocomplete="off">
+		</p>
+		<p>
+			<input name="phone" value="{{ row.phone }}" type="number" placeholder="phone"  autocomplete="off">
+		</p>
+		<p>
+			<input name="password" value="{{ row.password}}" type="password" placeholder="password"  autocomplete="off">
+		</p>
+		<p><input name="id" value="{{ row._id }}" type="hidden"></p>
+    </dl>
+    
+    
+		<button name="submit" onclick="return check1()">UPDATE</button>
+	
+</form>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</table>
+  <!-- The Modal -->
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">USER DETAILS</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            <form name="formx" >
+    <dl>
+		<p>
+			<input name="firstname" value="" type="text" id="1" placeholder="firstname" autocomplete="off" >
+		</p>
+		<p>
+			<input name="lastname" value="" type="text" id="2" placeholder="lastname" autocomplete="off" >
+		</p>
+		<p>
+			<input name="email" value="" type="text" id="3" placeholder="email" autocomplete="off" >
+		</p>
+		<p>
+			<input name="phone" value="" type="number" id="4" placeholder="phone" autocomplete="off" >
+		</p>
+		<p>
+			<input name="password" value="" type="password" id="5" placeholder="password" autocomplete="off" >
+		</p>
+    </dl>
+    
+		<button id="submit" class="btn-primary ">ADD</button>
+
+	
+</form>
+
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+  
+</div>
+</center>
+<script src="{{url_for('static',filename='ss.js')}}"></script>
+
+<script> 
+function upd()
+{
+	window.alert("user deleted successfully!")
+}
+function getselecteduser(id)
+{
+	 $('#id').val(id);
+}
+function check()                                    
+{ 
+    var firstname = document.forms["formx"]["firstname"];
+    var lastname = document.forms["formx"]["lastname"];                  
+    var email = document.forms["formx"]["email"];    
+    var phone = document.forms["formx"]["phone"];    
+    var password = document.forms["formx"]["password"];  
+   
+    if (firstname.value == "")                                  
+    { 
+        window.alert("Please enter your first name."); 
+        firstname.focus(); 
+        return false; 
+    } 
+     if (lastname.value == "")                                  
+    { 
+        window.alert("Please enter your last name."); 
+        lastname.focus(); 
+        return false; 
+    }
+       
+    if (email.value == "")                                   
+    { 
+        window.alert("Please enter a valid e-mail address."); 
+        email.focus(); 
+        return false; 
+    } 
+   
+    if (email.value.indexOf("@", 0) < 0)                 
+    { 
+        window.alert("Please enter a valid e-mail address."); 
+        email.focus(); 
+        return false; 
+    } 
+   
+    if (email.value.indexOf(".", 0) < 0)                 
+    { 
+        window.alert("Please enter a valid e-mail address."); 
+        email.focus(); 
+        return false; 
+    } 
+   
+    if (phone.value<1000000000||phone.value>9999999999)                           
+    { 
+        window.alert("Please enter your telephone number."); 
+        phone.focus(); 
+        return false; 
+    } 
+   
+    if (password.value=="")                        
+    { 
+        window.alert("Please enter your password"); 
+        password.focus(); 
+        return false; 
+    }   
+    window.alert("User added successfully!");
+    return true; }
+    function check1()                                    
+{ 
+    var firstname = document.forms["form12"]["firstname"];
+    var lastname = document.forms["form12"]["lastname"];                  
+    var email = document.forms["form12"]["email"];    
+    var phone = document.forms["form12"]["phone"];    
+    var password = document.forms["form12"]["password"];  
+   
+    if (firstname.value == "")                                  
+    { 
+        window.alert("Please enter your first name."); 
+        firstname.focus(); 
+        return false; 
+    } 
+     if (lastname.value == "")                                  
+    { 
+        window.alert("Please enter your last name."); 
+        lastname.focus(); 
+        return false; 
+    }
+       
+    if (email.value == "")                                   
+    { 
+        window.alert("Please enter a valid e-mail address."); 
+        email.focus(); 
+        return false; 
+    } 
+   
+    if (email.value.indexOf("@", 0) < 0)                 
+    { 
+        window.alert("Please enter a valid e-mail address."); 
+        email.focus(); 
+        return false; 
+    } 
+   
+    if (email.value.indexOf(".", 0) < 0)                 
+    { 
+        window.alert("Please enter a valid e-mail address."); 
+        email.focus(); 
+        return false; 
+    } 
+   
+    if (phone.value<1000000000||phone.value>9999999999)                           
+    { 
+        window.alert("Please enter your telephone number."); 
+        phone.focus(); 
+        return false; 
+    } 
+   
+    if (password.value=="")                        
+    { 
+        window.alert("Please enter your password"); 
+        password.focus(); 
+        return false; 
+    }   
+    window.alert("User updated successfully!");
+    return true; 
+
+}</script>
+
+
+</body>
+</html>
